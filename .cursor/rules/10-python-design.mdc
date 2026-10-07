@@ -1,0 +1,44 @@
+---
+description: Python design, typing and module-structure defaults for core logic.
+globs:
+  - "**/*.py"
+alwaysApply: false
+---
+
+# Python design defaults
+
+Favor explicit data and transformations. Where practical, make important domain logic resemble:
+
+```text
+State + Input -> State/Result + Events
+```
+
+Keep I/O, clocks, queues, concurrency and orchestration toward an imperative shell.
+
+## Types and illegal states
+
+Prefer typed dataclasses, `frozen=True` boundary messages, `Enum`, discriminated union-style result types such as `Approved | Rejected`, `NewType` or distinct value types for easily confused identifiers, and `Protocol` at genuine seams.
+
+Avoid untyped dictionaries as cross-component contracts, boolean-plus-optional-field structures that permit nonsense states, broad `Any` at important boundaries, and ignore pragmas merely to make checks pass.
+
+Expected domain outcomes should normally be explicit typed results/events, not exceptions. Use exceptions for unexpected programming failures, violated internal invariants, or infrastructure failures that normal domain control flow is not expected to handle routinely.
+
+## Mutation policy
+
+Default:
+- boundary messages: immutable;
+- public contract objects: immutable where practical;
+- internal owned state: may be mutable;
+- only the owning component mutates that state.
+
+Do not require full functional purity when controlled mutation is simpler.
+
+## Module structure
+
+Functions first, modules second, packages last.
+
+Do not create a module/package solely because a new class exists, a function is important, a file could be shorter, or a generic pattern suggests another layer.
+
+A separate module/package is justified by meaningful state ownership, coherent domain responsibility, an external boundary, substantial independently testable policy, or a distinct dependency boundary.
+
+Prefer domain-oriented names over generic buckets such as `utils`, `helpers`, `managers`, or `processors`.

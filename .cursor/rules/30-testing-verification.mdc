@@ -1,0 +1,40 @@
+---
+description: Testing, static analysis and verification policy for Python changes.
+globs:
+  - "**/*.py"
+  - "tests/**/*.py"
+alwaysApply: false
+---
+
+# Verification policy
+
+All non-trivial domain behaviour requires tests. Before writing a test, identify the requirement, invariant, contract, edge case, or discovered defect it protects. Prefer tests that would fail for a plausible incorrect implementation.
+
+## Testing hierarchy
+
+1. Pytest example-based unit/transition tests;
+2. Hypothesis property tests when a meaningful general invariant exists;
+3. Hypothesis stateful tests when correctness depends on operation sequences;
+4. Pytest contract tests for independently implemented interfaces/fakes;
+5. a small number of Pytest integration tests for important end-to-end dataflows;
+6. permanent minimal Pytest regression tests for discovered defects.
+
+State the property or invariant before adding a Hypothesis test. Do not introduce property-based testing without a meaningful property, or chase a coverage target.
+
+## Mutation testing
+
+Mutmut is an optional late quality probe for stable, critical domain modules. Inspect meaningful surviving mutants; do not optimize blindly for mutation score or run mutation testing on every edit.
+
+## Mocking
+
+Prefer direct tests of deterministic domain logic. At external/system boundaries, prefer small typed fakes implementing the same `Protocol` over deep `MagicMock` structures.
+
+## Required checks
+
+During iteration, run focused Pytest tests with `python -m pytest <test-path>`. Before a bounded task is declared complete, run the required Ruff lint and format checks, Pyright type check, and Pytest suite through the canonical gate:
+
+```bash
+./scripts/check.sh
+```
+
+Report the tests added and what they protect, the commands and results, and any verification gaps.

@@ -1,0 +1,57 @@
+---
+description: Apply when work involves concurrency, asyncio, threads, queues, shared state, ordering, retries, duplicates, cancellation or consistency.
+alwaysApply: false
+---
+
+# Concurrency and state policy
+
+Concurrency is not a default requirement.
+
+Before introducing concurrency, determine:
+1. whether true concurrent execution is required;
+2. whether the work is I/O-bound, CPU-bound, or neither;
+3. what mutable state exists and who owns it;
+4. where execution may interleave;
+5. which operations must be atomic;
+6. which operations require ordering and at what scope;
+7. whether commands/events can be retried, duplicated, dropped or reordered;
+8. cancellation and failure semantics.
+
+## Mechanism preference
+
+1. synchronous single-threaded Python;
+2. `asyncio` for required logical/I/O concurrency;
+3. threads when blocking I/O/callback/library constraints justify them;
+4. processes for genuine CPU parallelism.
+
+Do not make domain functions async merely because the overall system is concurrent.
+
+## State ownership
+
+Prefer one authoritative writer for each important mutable state.
+
+Prefer:
+
+```text
+commands -> state owner -> events/results
+```
+
+over many tasks mutating shared state behind locks.
+
+With asyncio, treat every `await` as a possible interleaving point and prefer `TaskGroup` for related task lifetimes.
+
+## Ordering
+
+Do not invent a global total order. Define the narrowest ordering guarantee that protects the relevant invariant, often per state owner, per entity/key, or per command stream.
+
+## Idempotency
+
+If a state-changing input may repeat, give it stable identity where appropriate, document duplicate semantics, and ensure a retry using the same identity does not accidentally repeat the logical effect.
+
+## Atomicity and failures
+
+Prefer one command producing one coherent transition inside one state owner. A failed command should make no state change or a deliberate documented failure transition. Avoid accidental partial mutation.
+
+## Formal-model escalation
+
+Do not introduce formal modelling merely because concurrency exists. Consider a small model only when independently scheduled actors affect one logical invariant, ordering changes correctness, cancellation races completion, retries/duplicates interact with state, cross-owner atomicity is unclear, or meaningful interleavings are no longer easy to enumerate manually.

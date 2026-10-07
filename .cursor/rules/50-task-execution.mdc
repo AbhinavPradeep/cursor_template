@@ -1,0 +1,28 @@
+---
+description: >
+  Apply when implementing or completing a defined engineering task.
+alwaysApply: false
+---
+
+# Bounded task execution
+
+Before editing:
+1. read task requirements/acceptance criteria;
+2. read referenced contracts/invariants;
+3. inspect relevant code/tests;
+4. identify expected files/areas to change;
+5. identify any shared contract that would be touched.
+
+During implementation:
+- implement one bounded behaviour at a time;
+- stay within scope;
+- preserve state ownership and dependency direction;
+- do not silently change shared contracts;
+- avoid unrelated refactors;
+- add tests alongside behaviour.
+
+After implementation:
+1. run focused tests;
+2. run the full deterministic gate;
+3. independently review the diff;
+4. report deviations, assumptions, and limitations.

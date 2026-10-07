@@ -1,0 +1,45 @@
+---
+description: >
+  Apply when analysing requirements, planning substantial work,
+  designing architecture or contracts, or deciding how a large change
+  should be approached.
+alwaysApply: false
+---
+
+# Engineering process
+
+For non-trivial work, preserve this ordering:
+
+1. specification and requirements;
+2. ambiguities, assumptions, edge cases and invariants;
+3. dataflow and state ownership;
+4. component boundaries and dependency direction;
+5. behavioural/type contracts between components;
+6. task dependency graph and ownership;
+7. bounded implementation;
+8. deterministic verification;
+9. independent review;
+10. human diff review.
+
+Architecture must precede task decomposition. Tasks should be consequences of the design, not a way to invent it.
+
+## Uncertainty
+
+When a material requirement is ambiguous, contradictory, missing, or underspecified, identify it explicitly. Do not invent behaviour merely to keep coding.
+
+## Scope discipline
+
+Prefer the smallest design and change that satisfies requirements. Avoid speculative features, unnecessary frameworks, distributed infrastructure, abstraction layers solely because a pattern suggests them, and unrelated cleanup.
+
+If implementation repeatedly crosses component boundaries, treat that as evidence that the architecture or contract may be incomplete.
+
+## Stop/report conditions
+
+Stop and report when:
+- requirements materially conflict;
+- implementation would violate an agreed contract/invariant;
+- a task needs substantial changes in another owned workstream;
+- the diff becomes much larger than planned;
+- a new dependency/concurrency mechanism appears necessary;
+- tests contradict agreed semantics;
+- a type/lint suppression would hide a real design problem.

@@ -1,0 +1,18 @@
+---
+description: >
+  Apply when generating, modifying, reviewing, or planning a
+  substantial amount of implementation code.
+alwaysApply: false
+---
+
+# Human reviewability is a design requirement
+
+Keep changes bounded and coherent, avoid unrelated refactors, prefer explicit implementation over clever abstractions, explain non-obvious decisions, and do not pre-build speculative functionality.
+
+Before substantial edits, identify expected files/areas to change.
+
+If work becomes substantially larger than expected, stop at a coherent boundary and report the remaining work rather than continuing into a mega-diff.
+
+After implementation, summarize behaviour, files changed, contract/state/invariant changes, tests, assumptions, verification results, and known limitations.
+
+AI explanations do not replace reading the diff. A task is not ready to merge until its human owner can explain the important control flow, state transitions, failure behaviour, and tests.
