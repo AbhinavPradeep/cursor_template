@@ -1,0 +1,21 @@
+---
+description: Controls when subagents may be used.
+alwaysApply: true
+---
+
+# Subagent orchestration
+
+Do not spawn or delegate to any subagent unless the user explicitly requests
+a named subagent in the current message.
+
+In particular:
+
+- skills must execute in the current parent agent by default;
+- do not invoke reviewers, critics, explorers, or general-purpose subagents
+  automatically;
+- do not launch independent reviews after completing a skill;
+- do not launch multiple or parallel subagents unless explicitly requested;
+- if a subagent would be useful, report that recommendation and stop rather
+  than launching it.
+
+The user is the orchestrator of subagent execution.
